@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="InterShareMobile.Pages.StartPage"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:xamEffects="clr-namespace:XamEffects;assembly=XamEffects"
+    xmlns:effects="http://xamarin.com/schemas/2020/toolkit"
+    xmlns:controls="clr-namespace:InterShareMobile.Controls;assembly=InterShareMobile"
+    ios:Page.UseSafeArea="False"
+    x:Name="ThisContentPage"
+    BindingContext="{x:Reference ThisContentPage}"
+    Style="{StaticResource SecondaryBackgroundStyle}"
+    Title="InterShare">
+
+    <Grid effects:SafeAreaEffect.SafeArea="false, true, false, false">
+        <controls:Pulse
+            Margin="0, 0, 0, 140"
+            AutoStart="true"
+            PulseColor="SkyBlue"
+            Source="InterShareMobile.Assets.Icon.png"
+            Speed="1" />
+
+        <StackLayout VerticalOptions="End">
+            <Frame Margin="0, 0, 0, 10" Padding="5, 5, 10, 5" CornerRadius="14" HorizontalOptions="Center" Style="{StaticResource Box}">
+                <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                    <Image Source="checkmark.png" WidthRequest="20"></Image>
+                    <Label FontAttributes="Bold" TextColor="#30CA58">Ready to receive</Label>
+                </StackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource Box}" HorizontalOptions="Center" Padding="10, 10, 10, 10">
+                <StackLayout effects:SafeAreaEffect.SafeArea="true, false, true, true">
+                    <Label Opacity="0.6" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0, 0, 0, 10">Send a file</Label>
+
+                    <Grid ColumnDefinitions="*, *">
+                        <controls:CustomButton
+                            Grid.Column="0"
+                            Type="Filled"
+                            Image="document.png"
+                            Clicked="OnSendFileClicked"
+                            Text="File" />
+
+                        <controls:CustomButton
+                            Grid.Column="1"
+                            Type="Filled"
+                            Image="images.png"
+                            Clicked="OnSendPhotoClicked"
+                            Text="Photo or Video" />
+
+                        <!-- <controls:CustomButton -->
+                        <!--     Grid.Column="2" -->
+                        <!--     Type="Filled" -->
+                        <!--     Clicked="OnSendVideoClicked" -->
+                        <!--     Image="video.png" -->
+                        <!--     Text="Video" /> -->
+                    </Grid>
+
+                    <controls:CustomButton
+                        Margin="0, 10, 0, 0"
+                        Type="Gray"
+                        Text="Show received files" />
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </Grid>
+
+</ContentPage>
+

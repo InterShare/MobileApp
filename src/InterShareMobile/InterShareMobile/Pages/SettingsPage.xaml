@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InterShareMobile.Pages.SettingsPage"
+             x:Name="This"
+             BindingContext="{x:Reference This}"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="True"
+             Title="Settings">
+    <ContentPage.Content>
+        <StackLayout Padding="20">
+            <Frame
+                Style="{StaticResource Box}">
+                <StackLayout>
+                    <Label
+                        Opacity="0.6"
+                        HorizontalTextAlignment="Center"
+                        >
+                        Settings like "change device-name" or "always allow specific senders" will arrive later on
+                    </Label>
+                </StackLayout>
+            </Frame>
+
+            <Frame
+                Style="{StaticResource Box}">
+                <StackLayout>
+                    <Grid
+                        ColumnDefinitions="100, *"
+                        RowDefinitions="Auto, Auto, Auto, Auto">
+
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Opacity="0.6">
+                            Developer
+                        </Label>
+                        <Label Grid.Row="0"
+                               Grid.Column="1">
+                            Julian Baumann
+                        </Label>
+
+
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Opacity="0.6">
+                            Website
+                        </Label>
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            TextColor="DodgerBlue"
+                            BackgroundColor="Transparent"
+                            TextTransform="None"
+                            TextDecorations="Underline"
+                            HorizontalOptions="Start"
+                            Text="{Binding Website}">
+
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOpenWebsiteClicked" />
+                            </Label.GestureRecognizers>
+                        </Label>
+
+
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Opacity="0.6">
+                            App Version
+                        </Label>
+                        <Label Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding AppVersion}"
+                        />
+
+                    </Grid>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

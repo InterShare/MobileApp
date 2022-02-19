@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="InterShareMobile.TabsPage"
+    xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:pages="clr-namespace:InterShareMobile.Pages;assembly=InterShareMobile"
+    ios:TabbedPage.TranslucencyMode="Opaque"
+    Style="{StaticResource TabBarStyle}"
+    android:TabbedPage.ToolbarPlacement="Bottom">
+
+    <!-- <TabbedPage.BarBackgroundColor> -->
+    <!--     <OnPlatform x:TypeArguments="Color"> -->
+    <!--         <On Platform="Android">#FFFFFF</On> -->
+    <!--     </OnPlatform> -->
+    <!-- </TabbedPage.BarBackgroundColor> -->
+    <!-- -->
+
+
+    <NavigationPage Title="Start" IconImageSource="home.png" ios:NavigationPage.PrefersLargeTitles="true">
+        <x:Arguments>
+            <pages:StartPage />
+        </x:Arguments>
+    </NavigationPage>
+
+    <NavigationPage Title="Files" IconImageSource="list.png" ios:NavigationPage.PrefersLargeTitles="true">
+        <x:Arguments>
+            <pages:FilesPage />
+        </x:Arguments>
+    </NavigationPage>
+
+    <NavigationPage Title="Settings" IconImageSource="cog.png" ios:NavigationPage.PrefersLargeTitles="true">
+        <x:Arguments>
+            <pages:SettingsPage />
+        </x:Arguments>
+    </NavigationPage>
+
+</TabbedPage>

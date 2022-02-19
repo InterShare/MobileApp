@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InterShareMobile.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <OnPlatform x:TypeArguments="x:Int32" x:Key="iOSBorderRadius">
+                <On Platform="iOS">13</On>
+                <On Platform="Android">5</On>
+            </OnPlatform>
+
+            <Color x:Key="SecondaryBackgroundColorLight">#F2F1F6</Color>
+            <Color x:Key="SecondaryBackgroundDark">#000000</Color>
+
+            <Color x:Key="SecondaryColorLight">#FFFFFF</Color>
+            <Color x:Key="SecondaryColorDark">#1C1C1E</Color>
+
+            <Color x:Key="TertiaryColorLight">#F2F1F6</Color>
+            <Color x:Key="TertiaryColorDark">#2E2E2E</Color>
+
+            <Color x:Key="SeparatorColorLight">#EFEFF0</Color>
+            <Color x:Key="SeparatorColorDark">#212023</Color>
+
+            <Style x:Key="SecondaryBackgroundStyle" TargetType="View">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SecondaryBackgroundColorLight}, Dark={StaticResource SecondaryBackgroundDark}}" />
+            </Style>
+
+            <Style x:Key="TabBarStyle" TargetType="TabbedPage">
+                <Setter Property="BarBackgroundColor" Value="{OnPlatform Android={AppThemeBinding Light={StaticResource SecondaryColorLight}, Dark={StaticResource SecondaryColorDark}}}" />
+            </Style>
+
+            <Style x:Key="Box" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SecondaryColorLight}, Dark={StaticResource SecondaryColorDark}}" />
+                <Setter Property="HasShadow" Value="False"></Setter>
+                <Setter Property="CornerRadius" Value="14"></Setter>
+                <Setter Property="Padding" Value="14"></Setter>
+            </Style>
+
+            <Style x:Key="BoxWithBorder" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SecondaryColorLight}, Dark={StaticResource SecondaryColorDark}}" />
+                <Setter Property="BorderColor" Value="{AppThemeBinding Light=#C5C5C5, Dark=#3B3B3B}"></Setter>
+                <Setter Property="HasShadow" Value="False"></Setter>
+                <Setter Property="CornerRadius" Value="16"></Setter>
+            </Style>
+
+            <Style x:Key="Separator" TargetType="BoxView">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SeparatorColorLight}, Dark={StaticResource SeparatorColorDark}}" />
+                <Setter Property="HeightRequest" Value="1.5"></Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

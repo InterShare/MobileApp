@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+     xmlns:xamEffects="clr-namespace:XamEffects;assembly=XamEffects"
+     x:Class="InterShareMobile.Controls.DeviceView"
+     x:Name="ThisDeviceView">
+    <ContentView.Content>
+        <StackLayout
+                BindingContext="{x:Reference ThisDeviceView}"
+                Margin="5"
+                WidthRequest="100"
+                HorizontalOptions="Center">
+
+            <xamEffects:BorderView
+                HorizontalOptions="Center"
+                CornerRadius="35"
+                BackgroundColor="LightGray"
+                xamEffects:TouchEffect.Color="#33FFFFFF"
+                HeightRequest="70"
+                WidthRequest="70"
+                xamEffects:Commands.Tap="{Binding DeviceTappedCommand}">
+            </xamEffects:BorderView>
+
+            <Label Opacity="0.6"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Small"
+                   Text="{Binding Path=DeviceInfo.DeviceName}" />
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

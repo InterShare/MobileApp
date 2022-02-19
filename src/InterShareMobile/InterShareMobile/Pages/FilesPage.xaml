@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InterShareMobile.Pages.FilesPage"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="False"
+             x:Name="This"
+             BindingContext="{x:Reference This}"
+             Title="Files">
+    <ContentPage.Content>
+        <ListView
+            x:Name="FileList"
+            SelectionMode="None"
+            ItemTapped="OnItemTap"
+            ItemsSource="{Binding Files}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Name}" TextColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" >
+                        <TextCell.ContextActions>
+                            <MenuItem Clicked="OnDelete"
+                                      CommandParameter="{Binding .}"
+                                      Text="Delete"
+                                      IsDestructive="True"
+                            />
+                        </TextCell.ContextActions>
+                    </TextCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>

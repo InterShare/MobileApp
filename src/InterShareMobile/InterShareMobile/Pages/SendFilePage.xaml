@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InterShareMobile.Pages.SendFilePage"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:converter="clr-namespace:InterShareMobile.Converter;assembly=InterShareMobile"
+             xmlns:controls="clr-namespace:InterShareMobile.Controls;assembly=InterShareMobile"
+             ios:Page.UseSafeArea="True"
+             x:Name="This"
+             BindingContext="{x:Reference This}"
+             Title="Send File">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Cancel"
+            Order="Default"
+            Priority="0"
+            Clicked="OnCloseClicked"
+        />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout IsVisible="{Binding SendFileData.Loading, Converter={converter:InverseBooleanConverter}}"
+                         Margin="15">
+
+                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <ActivityIndicator WidthRequest="30" HeightRequest="30" IsRunning="True"></ActivityIndicator>
+                    <Label Opacity="0.6" FontAttributes="Bold" VerticalOptions="Center">Looking for devices</Label>
+                </StackLayout>
+
+                <!-- <ListView ItemsSource="{Binding Devices}" -->
+                <!--           SelectionMode="None" -->
+                <!--           Margin="0" -->
+                <!--           ItemTapped="OnDeviceTapped"> -->
+                <!--     <ListView.ItemTemplate> -->
+                <!--         <DataTemplate> -->
+                <!--             <TextCell Text="{Binding DeviceName}" Detail="{Binding DeviceIdentifier}" TextColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" /> -->
+                <!--         </DataTemplate> -->
+                <!--     </ListView.ItemTemplate> -->
+                <!-- </ListView> -->
+
+                <ScrollView>
+                    <FlexLayout
+                        Wrap="Wrap"
+                        AlignItems="Start"
+                        AlignContent="Start"
+                        JustifyContent="Center"
+                        Padding="0, 20, 0, 0"
+                        BindableLayout.ItemsSource="{Binding Devices}">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <controls:DeviceView
+                                    DeviceInfo="{Binding}"
+                                    Clicked="OnDeviceTapped"/>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+
+                    </FlexLayout>
+                </ScrollView>
+            </StackLayout>
+
+            <StackLayout
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="Center"
+                IsVisible="{Binding SendFileData.Loading}">
+                <Label
+                    Opacity="0.7"
+                    FontAttributes="Bold"
+                    Margin="0, 0, 0, 20">
+                    Sending File
+                </Label>
+                <ActivityIndicator
+                    IsRunning="True"
+                    />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xamEffects="clr-namespace:XamEffects;assembly=XamEffects"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:converter="clr-namespace:InterShareMobile.Converter;assembly=InterShareMobile"
+             x:Class="InterShareMobile.Controls.CustomButton"
+             x:Name="This"
+             BindingContext="{x:Reference This}">
+    <ContentView.Content>
+        <xamEffects:BorderView
+            x:Name="CustomButtonBox"
+            HeightRequest="50"
+            xamEffects:TouchEffect.Color="#33FFFFFF"
+            xamEffects:Commands.Tap="{Binding TapCommand}"
+            CornerRadius="15">
+            <StackLayout VerticalOptions="Center" Orientation="Horizontal" HorizontalOptions="Center" Padding="10">
+                <Image IsVisible="{Binding Image, Converter={xct:IsNotNullOrEmptyConverter}}" WidthRequest="20" Source="{Binding Image}"></Image>
+
+                <Label HorizontalOptions="Center"
+                       IsVisible="{Binding Loading, Converter={converter:InverseBooleanConverter}}"
+                       x:Name="CustomButtonLabel"
+                       VerticalOptions="Center"
+                       FontAttributes="Bold"
+                       Text="{Binding Text}" />
+
+                <ActivityIndicator
+                    IsVisible="{Binding Loading}"
+                    IsRunning="True" />
+            </StackLayout>
+
+        </xamEffects:BorderView>
+    </ContentView.Content>
+</ContentView>
