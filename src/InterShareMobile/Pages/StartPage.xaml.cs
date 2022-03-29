@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using InterShareMobile.Core;
 using InterShareMobile.Entities;
 using InterShareMobile.Helper;
-using InterShareMobile.Services;
 using InterShareMobile.Services.Discovery;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
 using SMTSP.Entities;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -55,10 +58,10 @@ namespace InterShareMobile.Pages
             {
                 DeviceInfo.Loading = false;
 
-                App.SmtsReceiver.RegisterTransferRequestCallback(OnTransferRequestCallback);
-                App.SmtsReceiver.OnFileReceive += OnFileReceived;
+                App.SmtspReceiver.RegisterTransferRequestCallback(OnTransferRequestCallback);
+                App.SmtspReceiver.OnFileReceive += OnFileReceived;
 
-                DeviceInfo.Port = App.SmtsReceiver.Port;
+                DeviceInfo.Port = App.SmtspReceiver.Port;
                 DeviceInfo.IpAddress = IpAddress.GetIpAddress();
                 DeviceInfo.Name = AppConfig.MyDeviceInfo.DeviceName;
                 DeviceInfo.UserIdentifier = AppConfig.MyDeviceInfo.DeviceId;
@@ -102,11 +105,18 @@ namespace InterShareMobile.Pages
             if (fileStream.Length == file.FileSize || file.FileSize == -1)
             {
                 OnFileArrived.Invoke(this, null);
-                await DisplayAlert("Success", "The file was saved successfully", "Ok");
+
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await DisplayAlert("Success", "The file was saved successfully", "Ok");
+                });
             }
             else
             {
-                await DisplayAlert("Error", "File size did not match. The sender may have canceled the transfer", "Ok");
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await DisplayAlert("Error", "File size did not match. The sender may have canceled the transfer", "Ok");
+                });
 
                 try
                 {
@@ -139,10 +149,7 @@ namespace InterShareMobile.Pages
 
                 if (result != null)
                 {
-                    // Stream stream = await result.OpenReadAsync();
-                    // long fileSize = stream.Length;
-
-                    var navigation = new NavigationPage(new SendFilePage(result.FileName, result.FullPath));
+                    var navigation = new NavigationPage(new SendFilePage(result.FileName, () => result.OpenReadAsync().Result));
 
                     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                     await Navigation.PushModalAsync(navigation);
@@ -159,36 +166,25 @@ namespace InterShareMobile.Pages
         {
             try
             {
-                var directoryService = DependencyService.Get<IMediaPickerService>();
-                SelectedFile? result = await directoryService.PickPhotoOrVideo();
-
-                if (result != null)
+                List<MediaFile> chosenLibraryPhotos = await CrossMedia.Current.PickPhotosAsync(new PickMediaOptions
                 {
-                    // long fileSize = result.Stream.Length;
+                    RotateImage = false,
+                    PhotoSize = PhotoSize.Full,
+                    CompressionQuality = 100
+                }, new MultiPickerOptions()
+                {
+                    MaximumImagesCount = 1
+                });
 
-                    var navigation = new NavigationPage(new SendFilePage(result.Name, result.Path));
+                if (chosenLibraryPhotos.Any())
+                {
+                    MediaFile? selectedFile = chosenLibraryPhotos[0];
+                    string? fileName = Path.GetFileName(selectedFile.Path);
+                    var navigation = new NavigationPage(new SendFilePage(fileName, () => selectedFile.GetStream()));
 
                     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                     await Navigation.PushModalAsync(navigation);
                 }
-                // FileResult result = await MediaPicker.PickPhotoAsync();
-                //
-                // if (result != null)
-                // {
-                //     Stream stream = await result.OpenReadAsync();
-                //     long fileSize = stream.Length;
-                //
-                //     var navigation = new NavigationPage(new SendFilePage
-                //     {
-                //         FileName = result.FileName,
-                //         FileStream = stream,
-                //         FileSize = fileSize
-                //     });
-                //
-                //
-                //     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
-                //     await Navigation.PushModalAsync(navigation);
-                // }
             }
             catch (Exception exception)
             {
@@ -201,17 +197,16 @@ namespace InterShareMobile.Pages
         {
             try
             {
-                FileResult result = await MediaPicker.PickVideoAsync();
+                List<MediaFile> chosenLibraryVideos = await CrossMedia.Current.PickVideosAsync();
 
-                if (result != null)
+                if (chosenLibraryVideos.Any())
                 {
-                    // Stream stream = await result.OpenReadAsync();
-                    // long fileSize = stream.Length;
-                    //
-                    // var navigation = new NavigationPage(new SendFilePage(result.FileName, stream, fileSize));
+                    MediaFile? selectedFile = chosenLibraryVideos[0];
+                    string? fileName = Path.GetFileName(selectedFile.Path);
+                    var navigation = new NavigationPage(new SendFilePage(fileName, () => selectedFile.GetStream()));
 
-                    // navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
-                    // await Navigation.PushModalAsync(navigation);
+                    navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
+                    await Navigation.PushModalAsync(navigation);
                 }
             }
             catch (Exception exception)

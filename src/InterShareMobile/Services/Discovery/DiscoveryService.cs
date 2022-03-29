@@ -1,44 +1,33 @@
-using System;
-using SMTSP.Discovery;
-using SMTSP.Discovery.Entities;
+using System.Collections.ObjectModel;
+using SMTSP.Entities;
 
 namespace InterShareMobile.Services.Discovery
 {
     public class DiscoveryService : IDiscoveryService
     {
-        private SmtsDiscovery _smtsDiscovery;
+        // private SmtspDiscovery _smtsDiscovery;
 
-        public event EventHandler<DiscoveryDeviceInfo> OnNewDeviceDiscovered = delegate { };
+        public ObservableCollection<DeviceInfo> DiscoveredDevices { get; set; } = new ObservableCollection<DeviceInfo>();
 
-        public void Setup(DiscoveryDeviceInfo myDevice)
+        public void Setup(DeviceInfo myDevice)
         {
-            _smtsDiscovery = new SmtsDiscovery(myDevice);
-            _smtsDiscovery.OnNewDeviceDiscovered += OnDiscoveredDevicesChangeEvent;
+            // _smtsDiscovery = new SmtspDiscovery(myDevice);
+            // DiscoveredDevices = _smtsDiscovery.DiscoveredDevices;
         }
 
-        private void OnDiscoveredDevicesChangeEvent(object sender, DiscoveryDeviceInfo devicesInfo)
+        public void Advertise()
         {
-            OnNewDeviceDiscovered.Invoke(this, devicesInfo);
+            // _smtsDiscovery?.Advertise();
         }
 
-        public void RegisterForDiscovery()
+        public void StopAdvertising()
         {
-            _smtsDiscovery.AllowToBeDiscovered();
+            // _smtsDiscovery?.StopAdvertising();
         }
 
-        public void BroadcastMyDevice()
+        public void StartSearchingForDevices()
         {
-            _smtsDiscovery.BroadcastMyDevice();
-        }
-
-        public void StartDiscovering()
-        {
-            _smtsDiscovery.StartDiscovering();
-        }
-
-        public void StopDiscovering()
-        {
-            _smtsDiscovery.StopDiscovering();
+            // _smtsDiscovery?.SendOutLookupSignal();
         }
     }
 }

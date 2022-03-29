@@ -33,7 +33,7 @@
                 <StackLayout effects:SafeAreaEffect.SafeArea="true, false, true, true">
                     <Label Opacity="0.6" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0, 0, 0, 10">Send a file</Label>
 
-                    <Grid ColumnDefinitions="*, *">
+                    <Grid ColumnDefinitions="*, *, *">
                         <controls:CustomButton
                             Grid.Column="0"
                             Type="Filled"
@@ -46,14 +46,14 @@
                             Type="Filled"
                             Image="images.png"
                             Clicked="OnSendPhotoClicked"
-                            Text="Photo or Video" />
+                            Text="Photo" />
 
-                        <!-- <controls:CustomButton -->
-                        <!--     Grid.Column="2" -->
-                        <!--     Type="Filled" -->
-                        <!--     Clicked="OnSendVideoClicked" -->
-                        <!--     Image="video.png" -->
-                        <!--     Text="Video" /> -->
+                        <controls:CustomButton
+                            Grid.Column="2"
+                            Type="Filled"
+                            Clicked="OnSendVideoClicked"
+                            Image="video.png"
+                            Text="Video" />
                     </Grid>
 
                     <controls:CustomButton

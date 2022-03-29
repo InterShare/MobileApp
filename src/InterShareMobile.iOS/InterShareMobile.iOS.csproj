@@ -15,6 +15,7 @@
     <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <ProvisioningType>automatic</ProvisioningType>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,6 +56,7 @@
     <MtouchInterpreter>-all</MtouchInterpreter>
     <LangVersion>8.0</LangVersion>
     <MtouchExtraArgs>--interpreter</MtouchExtraArgs>
+    <IOSDebugOverWiFi>true</IOSDebugOverWiFi>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -73,7 +75,6 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Renderers\NativeNavigationBarRenderer.cs" />
     <Compile Include="Services\iOSDirectoryService.cs" />
-    <Compile Include="Services\iOSMediaPickerService.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,6 +119,9 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="IPNetwork2" Version="2.5.386" />
+    <PackageReference Include="Makaretu.Dns" Version="2.0.1" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
@@ -127,6 +131,10 @@
       <Project>{E70CDAF1-E71D-40C4-9D28-C104D4D03A43}</Project>
       <Name>InterShareMobile</Name>
       <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\Media.Plugin\Media.Plugin.csproj">
+      <Project>{69f30c63-1098-491f-9940-9f96da597419}</Project>
+      <Name>Media.Plugin</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

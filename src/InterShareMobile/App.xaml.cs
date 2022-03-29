@@ -1,9 +1,9 @@
 ﻿using System;
 using InterShareMobile.Core;
 using InterShareMobile.Pages;
-using InterShareMobile.Services.Discovery;
 using SMTSP;
 using SMTSP.Core;
+using SMTSP.Discovery;
 using SMTSP.Discovery.Entities;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -16,15 +16,15 @@ namespace InterShareMobile
 {
     public partial class App : Application
     {
-        private readonly IDiscoveryService _discoveryService;
+        private Advertiser? _advertiser;
 
-        public static SmtsReceiver SmtsReceiver { get; set; }
+        public static SmtspReceiver SmtspReceiver { get; set; }
 
         public App()
         {
             AppConfig.Initialize();
 
-            _discoveryService = Ioc.Resolve<IDiscoveryService>();
+            // _discoveryService = Ioc.Resolve<IDiscoveryService>();
 
             Current.Properties.TryGetValue("Name", out object name);
             Current.Properties.TryGetValue("DeviceIdentifier", out object deviceIdentifier);
@@ -48,7 +48,7 @@ namespace InterShareMobile
                 _ => DeviceTypes.Phone
             };
 
-            AppConfig.MyDeviceInfo = new DiscoveryDeviceInfo()
+            AppConfig.MyDeviceInfo = new SMTSP.Entities.DeviceInfo()
             {
                 DeviceId = (string) deviceIdentifier,
                 DeviceName = (string) name,
@@ -69,14 +69,12 @@ namespace InterShareMobile
             try
             {
                 SmtsConfig.LoggerOutputEnabled = true;
+                SmtspReceiver = new SmtspReceiver();
+                SmtspReceiver.StartReceiving();
+                AppConfig.MyDeviceInfo.Port = ushort.Parse(SmtspReceiver.Port.ToString());
+                _advertiser = new Advertiser(AppConfig.MyDeviceInfo);
 
-                SmtsReceiver = new SmtsReceiver();
-                SmtsReceiver.StartReceiving();
-
-                AppConfig.MyDeviceInfo.TransferPort = SmtsReceiver.Port;
-
-                _discoveryService.Setup(AppConfig.MyDeviceInfo);
-                _discoveryService.RegisterForDiscovery();
+                _advertiser.Advertise();
             }
             catch (Exception e)
             {
@@ -88,15 +86,14 @@ namespace InterShareMobile
         {
         }
 
-        protected override void OnSleep()
+        protected async override void OnSleep()
         {
-            _discoveryService.StopDiscovering();
+            _advertiser?.StopAdvertising();
         }
 
-        protected override void OnResume()
+        protected async override void OnResume()
         {
-            _discoveryService.RegisterForDiscovery();
-            _discoveryService.BroadcastMyDevice();
+            _advertiser?.Advertise();
         }
     }
 }

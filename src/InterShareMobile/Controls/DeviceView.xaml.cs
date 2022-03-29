@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Input;
-using SMTSP.Discovery.Entities;
+using SMTSP.Entities;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,20 +11,20 @@ namespace InterShareMobile.Controls
     {
         public static readonly BindableProperty DeviceInfoProperty = BindableProperty.Create(
             propertyName: nameof(DeviceInfo),
-            returnType: typeof(DiscoveryDeviceInfo),
+            returnType: typeof(DeviceInfo),
             declaringType: typeof(DeviceView),
             defaultValue: null,
             defaultBindingMode: BindingMode.OneWay
         );
 
-        public DiscoveryDeviceInfo DeviceInfo
+        public DeviceInfo DeviceInfo
         {
-            get => (DiscoveryDeviceInfo)GetValue(DeviceInfoProperty);
+            get => (DeviceInfo)GetValue(DeviceInfoProperty);
             set => SetValue(DeviceInfoProperty, value);
         }
 
         public ICommand DeviceTappedCommand { get; set; }
-        public event EventHandler<DiscoveryDeviceInfo> Clicked = delegate { };
+        public event EventHandler<DeviceInfo> Clicked = delegate { };
 
         public DeviceView()
         {

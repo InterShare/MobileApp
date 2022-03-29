@@ -22,7 +22,7 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <StackLayout IsVisible="{Binding SendFileData.Loading, Converter={converter:InverseBooleanConverter}}"
+            <StackLayout IsVisible="{Binding Bindings.Loading, Converter={converter:InverseBooleanConverter}}"
                          Margin="15">
 
                 <StackLayout Orientation="Horizontal" VerticalOptions="Center">
@@ -30,42 +30,43 @@
                     <Label Opacity="0.6" FontAttributes="Bold" VerticalOptions="Center">Looking for devices</Label>
                 </StackLayout>
 
-                <!-- <ListView ItemsSource="{Binding Devices}" -->
-                <!--           SelectionMode="None" -->
-                <!--           Margin="0" -->
-                <!--           ItemTapped="OnDeviceTapped"> -->
-                <!--     <ListView.ItemTemplate> -->
-                <!--         <DataTemplate> -->
-                <!--             <TextCell Text="{Binding DeviceName}" Detail="{Binding DeviceIdentifier}" TextColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" /> -->
-                <!--         </DataTemplate> -->
-                <!--     </ListView.ItemTemplate> -->
-                <!-- </ListView> -->
+                <ListView ItemsSource="{Binding Devices}"
+                          SelectionMode="None"
+                          Margin="0"
+                          ItemTapped="ListView_OnItemTapped">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell Text="{Binding DeviceName}" Detail="{Binding IpAddress}" TextColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-                <ScrollView>
-                    <FlexLayout
-                        Wrap="Wrap"
-                        AlignItems="Start"
-                        AlignContent="Start"
-                        JustifyContent="Center"
-                        Padding="0, 20, 0, 0"
-                        BindableLayout.ItemsSource="{Binding Devices}">
-
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <controls:DeviceView
-                                    DeviceInfo="{Binding}"
-                                    Clicked="OnDeviceTapped"/>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-
-                    </FlexLayout>
-                </ScrollView>
+                <!-- <ScrollView> -->
+                <!--     <FlexLayout -->
+                <!--         Wrap="Wrap" -->
+                <!--         AlignItems="Start" -->
+                <!--         AlignContent="Start" -->
+                <!--         JustifyContent="Center" -->
+                <!--         Padding="0, 20, 0, 0" -->
+                <!--         BindableLayout.ItemsSource="{Binding Devices}"> -->
+                <!-- -->
+                <!--         <BindableLayout.ItemTemplate> -->
+                <!--             <DataTemplate> -->
+                <!--                 <controls:DeviceView -->
+                <!--                     Margin="10" -->
+                <!--                     DeviceInfo="{Binding}" -->
+                <!--                     Clicked="OnDeviceTapped"/> -->
+                <!--             </DataTemplate> -->
+                <!--         </BindableLayout.ItemTemplate> -->
+                <!-- -->
+                <!--     </FlexLayout> -->
+                <!-- </ScrollView> -->
             </StackLayout>
 
             <StackLayout
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="Center"
-                IsVisible="{Binding SendFileData.Loading}">
+                IsVisible="{Binding Bindings.Loading}">
                 <Label
                     Opacity="0.7"
                     FontAttributes="Bold"

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterShareMobile.iOS", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterShareMobile", "src\InterShareMobile\InterShareMobile.csproj", "{E70CDAF1-E71D-40C4-9D28-C104D4D03A43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Media.Plugin", "src\Media.Plugin\Media.Plugin.csproj", "{69F30C63-1098-491F-9940-9F96DA597419}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{E70CDAF1-E71D-40C4-9D28-C104D4D03A43}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{E70CDAF1-E71D-40C4-9D28-C104D4D03A43}.Release|iPhone.ActiveCfg = Release|Any CPU
 		{E70CDAF1-E71D-40C4-9D28-C104D4D03A43}.Release|iPhone.Build.0 = Release|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{69F30C63-1098-491F-9940-9F96DA597419}.Release|iPhone.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

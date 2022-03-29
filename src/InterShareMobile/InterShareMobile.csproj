@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,17 +15,20 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="IPNetwork2" Version="2.5.386" />
+    <PackageReference Include="Makaretu.Dns" Version="2.0.1" />
+    <PackageReference Include="SMTSP" Version="1.0.10" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
     <PackageReference Include="XamEffects" Version="1.6.3" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.0" />
-    <PackageReference Include="SMTSP" Version="1.0.3" />
     <PackageReference Include="SkiaSharp.Views" Version="2.80.3" />
     <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.3" />
     <PackageReference Include="Castle.Windsor" Version="5.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="XamEffects" />
@@ -32,9 +37,20 @@
     <None Remove="SkiaSharp.Views" />
     <None Remove="SkiaSharp.Views.Forms" />
     <None Remove="Castle.Windsor" />
+    <None Remove="Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\Icon.png" />
     <EmbeddedResource Include="Assets\Icon.png" />
+  </ItemGroup>
+
+<!--  <ItemGroup>-->
+<!--    <Reference Include="SMTSP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">-->
+<!--      <HintPath>..\..\..\SMTSP\src\SMTSP\bin\Debug\netstandard2.0\SMTSP.dll</HintPath>-->
+<!--    </Reference>-->
+<!--  </ItemGroup>-->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Media.Plugin\Media.Plugin.csproj" />
   </ItemGroup>
 </Project>

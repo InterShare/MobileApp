@@ -7,3 +7,5 @@
 <br />
 
 <h1 align="center">InterShare iOS/Android App</h1>
+
+[This fork](https://github.com/MatthewKapteyn/MediaPlugin) is used as `Media.Plugin` to request files from the device.

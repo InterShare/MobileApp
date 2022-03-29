@@ -1,6 +1,6 @@
 namespace InterShareMobile.Entities
 {
-    public class SendFileData : Notifiable
+    public class SendFileBindings : Notifiable
     {
         private bool _loading;
         private string _ipAddress;

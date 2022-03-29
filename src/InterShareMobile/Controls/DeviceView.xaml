@@ -6,26 +6,31 @@
      x:Class="InterShareMobile.Controls.DeviceView"
      x:Name="ThisDeviceView">
     <ContentView.Content>
-        <StackLayout
-                BindingContext="{x:Reference ThisDeviceView}"
+        <xamEffects:BorderView
+            CornerRadius="15"
+            BindingContext="{x:Reference ThisDeviceView}"
+            xamEffects:TouchEffect.Color="Gray"
+            xamEffects:Commands.Tap="{Binding DeviceTappedCommand}">
+
+            <StackLayout
                 Margin="5"
                 WidthRequest="100"
                 HorizontalOptions="Center">
 
-            <xamEffects:BorderView
-                HorizontalOptions="Center"
-                CornerRadius="35"
-                BackgroundColor="LightGray"
-                xamEffects:TouchEffect.Color="#33FFFFFF"
-                HeightRequest="70"
-                WidthRequest="70"
-                xamEffects:Commands.Tap="{Binding DeviceTappedCommand}">
-            </xamEffects:BorderView>
+                <Frame
+                    HasShadow="False"
+                    HorizontalOptions="Center"
+                    CornerRadius="45"
+                    BackgroundColor="LightGray"
+                    HeightRequest="50"
+                    WidthRequest="50" />
 
-            <Label Opacity="0.6"
-                   HorizontalTextAlignment="Center"
-                   FontSize="Small"
-                   Text="{Binding Path=DeviceInfo.DeviceName}" />
-        </StackLayout>
+                <Label Opacity="0.6"
+                       HorizontalTextAlignment="Center"
+                       FontSize="Small"
+                       Text="{Binding Path=DeviceInfo.DeviceName}" />
+            </StackLayout>
+
+        </xamEffects:BorderView>
     </ContentView.Content>
 </ContentView>
