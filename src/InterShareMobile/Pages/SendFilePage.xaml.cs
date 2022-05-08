@@ -21,8 +21,7 @@ namespace InterShareMobile.Pages
     {
         private readonly Discovery _discovery;
         private readonly Func<Stream> _getStreamCallback;
-        private readonly string _fileName;
-        private Stream? _fileStream;
+        private readonly SmtspContent _content;
 
         public ObservableCollection<DeviceInfo> Devices { get; set; } = new ObservableCollection<DeviceInfo>();
 
@@ -31,12 +30,11 @@ namespace InterShareMobile.Pages
             Port = 42420
         };
 
-        public SendFilePage(string fileName, Func<Stream> getStreamCallback)
+        public SendFilePage(SmtspContent content)
         {
             _discovery = new Discovery(AppConfig.MyDeviceInfo, DiscoveryTypes.Mdns);
 
-            _fileName = fileName;
-            _getStreamCallback = getStreamCallback;
+            _content = content;
 
             try
             {
@@ -68,7 +66,7 @@ namespace InterShareMobile.Pages
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            _fileStream?.Dispose();
+            _content?.Dispose();
             _discovery.Dispose();
         }
 
@@ -78,21 +76,13 @@ namespace InterShareMobile.Pages
             {
                 Bindings.Loading = true;
 
-                _fileStream = _getStreamCallback.Invoke();
-                long fileSize = _fileStream.Length;
-
                 SendFileResponses result = await SmtspSender.SendFile(
                         new DeviceInfo()
                         {
                             IpAddress = ipAddress,
                             Port = port
                         },
-                        new SmtspFileContent()
-                        {
-                            FileName = _fileName,
-                            DataStream = _fileStream,
-                            FileSize = fileSize
-                        },
+                        _content,
                         AppConfig.MyDeviceInfo
                     );
 
@@ -103,7 +93,7 @@ namespace InterShareMobile.Pages
                     return;
                 }
 
-                _fileStream?.Dispose();
+                _content?.Dispose();
                 await Navigation.PopModalAsync();
 
             }

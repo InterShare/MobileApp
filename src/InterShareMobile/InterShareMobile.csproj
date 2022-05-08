@@ -38,6 +38,7 @@
     <None Remove="SkiaSharp.Views.Forms" />
     <None Remove="Castle.Windsor" />
     <None Remove="Newtonsoft.Json" />
+    <None Remove="Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\Icon.png" />
@@ -52,5 +53,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Media.Plugin\Media.Plugin.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dto\" />
   </ItemGroup>
 </Project>

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using InterShareMobile.Core;
+using InterShareMobile.Dto;
 using InterShareMobile.Entities;
 using InterShareMobile.Helper;
 using InterShareMobile.Services.Discovery;
@@ -82,7 +84,7 @@ namespace InterShareMobile.Pages
             {
                 await HandleFileReceived(fileContent);
             }
-            else if (content is SmtspContent clipboardContent)
+            else if (content is SmtspClipboardContent clipboardContent)
             {
                 await HandleClipboardReceived(clipboardContent);
             }
@@ -178,7 +180,16 @@ namespace InterShareMobile.Pages
 
                 if (result != null)
                 {
-                    var navigation = new NavigationPage(new SendFilePage(result.FileName, () => result.OpenReadAsync().Result));
+                    var fileStream = await result.OpenReadAsync();
+
+                    var content = new SmtspFileContent()
+                    {
+                        FileName = result.FileName,
+                        DataStream = fileStream,
+                        FileSize = fileStream.Length
+                    };
+
+                    var navigation = new NavigationPage(new SendFilePage(content));
 
                     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                     await Navigation.PushModalAsync(navigation);
@@ -209,7 +220,16 @@ namespace InterShareMobile.Pages
                 {
                     MediaFile? selectedFile = chosenLibraryPhotos[0];
                     string? fileName = Path.GetFileName(selectedFile.Path);
-                    var navigation = new NavigationPage(new SendFilePage(fileName, () => selectedFile.GetStream()));
+                    var fileStream = selectedFile.GetStream();
+
+                    var content = new SmtspFileContent()
+                    {
+                        FileName = fileName,
+                        DataStream = fileStream,
+                        FileSize = fileStream.Length
+                    };
+
+                    var navigation = new NavigationPage(new SendFilePage(content));
 
                     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                     await Navigation.PushModalAsync(navigation);
@@ -232,7 +252,16 @@ namespace InterShareMobile.Pages
                 {
                     MediaFile? selectedFile = chosenLibraryVideos[0];
                     string? fileName = Path.GetFileName(selectedFile.Path);
-                    var navigation = new NavigationPage(new SendFilePage(fileName, () => selectedFile.GetStream()));
+                    var fileStream = selectedFile.GetStream();
+
+                    var content = new SmtspFileContent()
+                    {
+                        FileName = fileName,
+                        DataStream = fileStream,
+                        FileSize = fileStream.Length
+                    };
+
+                    var navigation = new NavigationPage(new SendFilePage(content));
 
                     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                     await Navigation.PushModalAsync(navigation);
@@ -242,6 +271,39 @@ namespace InterShareMobile.Pages
             {
                 Console.WriteLine(exception);
                 await DisplayAlert("Exception", exception.Message.ToString(), "OK");
+            }
+        }
+
+        private async void OnSendClipboardClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var clipboard = Clipboard.HasText ? await Clipboard.GetTextAsync() : null;
+
+                if (clipboard == null)
+                {
+                    await DisplayAlert("Cannot send", "Clipboard is empty", "Ok");
+                    return;
+                }
+
+                var clipboardStream = new MemoryStream(Encoding.UTF8.GetBytes(clipboard));
+
+                var content = new SmtspClipboardContent
+                {
+                    DataStream = clipboardStream
+                };
+                
+                var navigation = new NavigationPage(new SendFilePage(content));
+
+                navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
+                await Navigation.PushModalAsync(navigation);
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                await DisplayAlert("Exception", ex.Message, "Ok");
             }
         }
     }
