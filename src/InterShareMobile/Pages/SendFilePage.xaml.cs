@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
@@ -9,6 +9,7 @@ using InterShareMobile.Helper;
 using SMTSP;
 using SMTSP.Discovery;
 using SMTSP.Entities;
+using SMTSP.Entities.Content;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using DeviceInfo = SMTSP.Entities.DeviceInfo;
@@ -32,7 +33,7 @@ namespace InterShareMobile.Pages
 
         public SendFilePage(string fileName, Func<Stream> getStreamCallback)
         {
-            _discovery = new Discovery(AppConfig.MyDeviceInfo);
+            _discovery = new Discovery(AppConfig.MyDeviceInfo, DiscoveryTypes.Mdns);
 
             _fileName = fileName;
             _getStreamCallback = getStreamCallback;
@@ -86,9 +87,9 @@ namespace InterShareMobile.Pages
                             IpAddress = ipAddress,
                             Port = port
                         },
-                        new SmtsFile()
+                        new SmtspFileContent()
                         {
-                            Name = _fileName,
+                            FileName = _fileName,
                             DataStream = _fileStream,
                             FileSize = fileSize
                         },

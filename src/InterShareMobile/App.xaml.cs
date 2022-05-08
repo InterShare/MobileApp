@@ -2,6 +2,7 @@
 using InterShareMobile.Core;
 using InterShareMobile.Pages;
 using SMTSP;
+using SMTSP.Advertisement;
 using SMTSP.Core;
 using SMTSP.Discovery;
 using SMTSP.Discovery.Entities;
