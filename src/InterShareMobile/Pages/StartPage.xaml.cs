@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using InterShareMobile.Core;
+using InterShareMobile.Dto;
 using InterShareMobile.Entities;
 using InterShareMobile.Helper;
 using InterShareMobile.Services.Discovery;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using SMTSP.Entities;
+using SMTSP.Entities.Content;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
@@ -59,7 +62,7 @@ namespace InterShareMobile.Pages
                 DeviceInfo.Loading = false;
 
                 App.SmtspReceiver.RegisterTransferRequestCallback(OnTransferRequestCallback);
-                App.SmtspReceiver.OnFileReceive += OnFileReceived;
+                App.SmtspReceiver.OnFileReceive += OnContentReceived;
 
                 DeviceInfo.Port = App.SmtspReceiver.Port;
                 DeviceInfo.IpAddress = IpAddress.GetIpAddress();
@@ -75,9 +78,28 @@ namespace InterShareMobile.Pages
             }
         }
 
-        private async void OnFileReceived(object sender, SmtsFile file)
+        private async void OnContentReceived(object sender, SmtspContent content)
         {
-            var fullPath = $"{AppConfig.DownloadPath}/{file.Name}";
+            if (content is SmtspFileContent fileContent)
+            {
+                await HandleFileReceived(fileContent);
+            }
+            else if (content is SmtspClipboardContent clipboardContent)
+            {
+                await HandleClipboardReceived(clipboardContent);
+            }
+        }
+
+        private async Task HandleClipboardReceived(SmtspContent content)
+        {
+            using var sr = new StreamReader(content.DataStream);
+            var receivedText = await sr.ReadToEndAsync();
+            await Clipboard.SetTextAsync(receivedText);
+        }
+
+        private async Task HandleFileReceived(SmtspFileContent file)
+        {
+            var fullPath = $"{AppConfig.DownloadPath}/{file.FileName}";
 
             var count = 1;
 
@@ -91,7 +113,7 @@ namespace InterShareMobile.Pages
                 Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
             }
 
-            while(File.Exists(newFullPath))
+            while (File.Exists(newFullPath))
             {
                 var tempFileName = $"{fileNameOnly} ({count++})";
                 newFullPath = Path.Combine(path, tempFileName + extension);
@@ -135,7 +157,16 @@ namespace InterShareMobile.Pages
         {
             return MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                bool answer = await DisplayAlert("Received file request", $"{transferRequest.SenderName}\n wants to send you \"{transferRequest.FileName}\"", "Accept", "Deny");
+                bool answer = false;
+
+                if (transferRequest.Content is SmtspFileContent fileContent)
+                {
+                    answer = await DisplayAlert("Received file request", $"{transferRequest.SenderName}\n wants to send you \"{fileContent.FileName}\"", "Accept", "Deny");
+                }
+                else
+                {
+                    answer = await DisplayAlert("Received clipboard request", $"{transferRequest.SenderName}\n wants to share the clipboard", "Accept", "Deny");
+                }
 
                 return answer;
             });
@@ -149,7 +180,16 @@ namespace InterShareMobile.Pages
 
                 if (result != null)
                 {
-                    var navigation = new NavigationPage(new SendFilePage(result.FileName, () => result.OpenReadAsync().Result));
+                    var fileStream = await result.OpenReadAsync();
+
+                    var content = new SmtspFileContent()
+                    {
+                        FileName = result.FileName,
+                        DataStream = fileStream,
+                        FileSize = fileStream.Length
+                    };
+
+                    var navigation = new NavigationPage(new SendFilePage(content));
 
                     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                     await Navigation.PushModalAsync(navigation);
@@ -180,7 +220,16 @@ namespace InterShareMobile.Pages
                 {
                     MediaFile? selectedFile = chosenLibraryPhotos[0];
                     string? fileName = Path.GetFileName(selectedFile.Path);
-                    var navigation = new NavigationPage(new SendFilePage(fileName, () => selectedFile.GetStream()));
+                    var fileStream = selectedFile.GetStream();
+
+                    var content = new SmtspFileContent()
+                    {
+                        FileName = fileName,
+                        DataStream = fileStream,
+                        FileSize = fileStream.Length
+                    };
+
+                    var navigation = new NavigationPage(new SendFilePage(content));
 
                     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                     await Navigation.PushModalAsync(navigation);
@@ -203,7 +252,16 @@ namespace InterShareMobile.Pages
                 {
                     MediaFile? selectedFile = chosenLibraryVideos[0];
                     string? fileName = Path.GetFileName(selectedFile.Path);
-                    var navigation = new NavigationPage(new SendFilePage(fileName, () => selectedFile.GetStream()));
+                    var fileStream = selectedFile.GetStream();
+
+                    var content = new SmtspFileContent()
+                    {
+                        FileName = fileName,
+                        DataStream = fileStream,
+                        FileSize = fileStream.Length
+                    };
+
+                    var navigation = new NavigationPage(new SendFilePage(content));
 
                     navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                     await Navigation.PushModalAsync(navigation);
@@ -213,6 +271,39 @@ namespace InterShareMobile.Pages
             {
                 Console.WriteLine(exception);
                 await DisplayAlert("Exception", exception.Message.ToString(), "OK");
+            }
+        }
+
+        private async void OnSendClipboardClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var clipboard = Clipboard.HasText ? await Clipboard.GetTextAsync() : null;
+
+                if (clipboard == null)
+                {
+                    await DisplayAlert("Cannot send", "Clipboard is empty", "Ok");
+                    return;
+                }
+
+                var clipboardStream = new MemoryStream(Encoding.UTF8.GetBytes(clipboard));
+
+                var content = new SmtspClipboardContent
+                {
+                    DataStream = clipboardStream
+                };
+                
+                var navigation = new NavigationPage(new SendFilePage(content));
+
+                navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
+                await Navigation.PushModalAsync(navigation);
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                await DisplayAlert("Exception", ex.Message, "Ok");
             }
         }
     }

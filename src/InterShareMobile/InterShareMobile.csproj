@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="IPNetwork2" Version="2.5.386" />
     <PackageReference Include="Makaretu.Dns" Version="2.0.1" />
-    <PackageReference Include="SMTSP" Version="1.0.10" />
+    <PackageReference Include="SMTSP" Version="2.0.0-beta" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
     <PackageReference Include="XamEffects" Version="1.6.3" />
@@ -38,6 +38,7 @@
     <None Remove="SkiaSharp.Views.Forms" />
     <None Remove="Castle.Windsor" />
     <None Remove="Newtonsoft.Json" />
+    <None Remove="Dto\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\Icon.png" />
@@ -52,5 +53,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Media.Plugin\Media.Plugin.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dto\" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 using InterShareMobile.Core;
 using InterShareMobile.Pages;
 using SMTSP;
+using SMTSP.Advertisement;
 using SMTSP.Core;
 using SMTSP.Discovery;
 using SMTSP.Discovery.Entities;
@@ -72,8 +73,8 @@ namespace InterShareMobile
                 SmtspReceiver = new SmtspReceiver();
                 SmtspReceiver.StartReceiving();
                 AppConfig.MyDeviceInfo.Port = ushort.Parse(SmtspReceiver.Port.ToString());
-                _advertiser = new Advertiser(AppConfig.MyDeviceInfo);
-
+                _advertiser = new Advertiser(AppConfig.MyDeviceInfo, SMTSP.Entities.DiscoveryTypes.Mdns);
+              
                 _advertiser.Advertise();
             }
             catch (Exception e)
