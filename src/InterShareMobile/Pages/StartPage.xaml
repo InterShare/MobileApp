@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="InterShareMobile.Pages.StartPage"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-    xmlns:xamEffects="clr-namespace:XamEffects;assembly=XamEffects"
     xmlns:effects="http://xamarin.com/schemas/2020/toolkit"
     xmlns:controls="clr-namespace:InterShareMobile.Controls;assembly=InterShareMobile"
     ios:Page.UseSafeArea="False"
@@ -12,6 +11,10 @@
     BindingContext="{x:Reference ThisContentPage}"
     Style="{StaticResource SecondaryBackgroundStyle}"
     Title="InterShare">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="gear.png" Text="Hello" Clicked="OnSettingsClicked" />
+    </ContentPage.ToolbarItems>
 
     <Grid effects:SafeAreaEffect.SafeArea="false, true, false, false">
         <controls:Pulse
@@ -68,7 +71,8 @@
                     <controls:CustomButton
                         Margin="0, 10, 0, 0"
                         Type="Gray"
-                        Text="Show received files" />
+                        Text="Show received files"
+                        Clicked="OnShowDownloadedFilesClicked" />
                 </StackLayout>
             </Frame>
         </StackLayout>

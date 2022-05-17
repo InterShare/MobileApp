@@ -32,7 +32,7 @@ namespace InterShareMobile.Pages
 
         public SendFilePage(SmtspContent content)
         {
-            _discovery = new Discovery(AppConfig.MyDeviceInfo, DiscoveryTypes.Mdns);
+            _discovery = new Discovery(AppConfig.MyDeviceInfo, DiscoveryTypes.UdpBroadcasts);
 
             _content = content;
 

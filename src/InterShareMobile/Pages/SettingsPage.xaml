@@ -15,8 +15,7 @@
                 <StackLayout>
                     <Label
                         Opacity="0.6"
-                        HorizontalTextAlignment="Center"
-                        >
+                        HorizontalTextAlignment="Center">
                         Settings like "change device-name" or "always allow specific senders" will arrive later on
                     </Label>
                 </StackLayout>

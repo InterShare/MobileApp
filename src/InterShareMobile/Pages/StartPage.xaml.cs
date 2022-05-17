@@ -8,6 +8,7 @@ using InterShareMobile.Core;
 using InterShareMobile.Dto;
 using InterShareMobile.Entities;
 using InterShareMobile.Helper;
+using InterShareMobile.Services;
 using InterShareMobile.Services.Discovery;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -42,7 +43,7 @@ namespace InterShareMobile.Pages
             Start().RunAndForget();
 
             Connectivity.ConnectivityChanged += OnConnectivityChanged;
-            //
+
             // var navigation = new NavigationPage(new SendFilePage());
             // navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
             // Navigation.PushModalAsync(navigation);
@@ -163,10 +164,10 @@ namespace InterShareMobile.Pages
                 {
                     answer = await DisplayAlert("Received file request", $"{transferRequest.SenderName}\n wants to send you \"{fileContent.FileName}\"", "Accept", "Deny");
                 }
-                else
-                {
-                    answer = await DisplayAlert("Received clipboard request", $"{transferRequest.SenderName}\n wants to share the clipboard", "Accept", "Deny");
-                }
+                //else
+                //{
+                //    answer = await DisplayAlert("Received clipboard request", $"{transferRequest.SenderName}\n wants to share the clipboard", "Accept", "Deny");
+                //}
 
                 return answer;
             });

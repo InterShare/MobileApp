@@ -29,6 +29,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
     <LangVersion>8.0</LangVersion>
+    <DeviceSpecificBuild>true</DeviceSpecificBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -148,5 +149,6 @@
     <BundleResource Include="Resources\settings.png" />
     <BundleResource Include="Resources\video.png" />
     <BundleResource Include="Resources\wifi.png" />
+    <BundleResource Include="Resources\gear.png" />
   </ItemGroup>
 </Project>
