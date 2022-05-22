@@ -109,7 +109,7 @@ jobs:
     - name: Set Android version
       uses: damienaicheh/update-android-version-manifest-action@v1.0.0
       with:
-        android-manifest-path: ./GitHubActions.Android/Properties/AndroidManifest.xml
+        android-manifest-path: src/InterShareMobile.Android/Properties/AndroidManifest.xml
         version-name: ${{ steps.construct_version.outputs.branch }}
         version-code: ${{ github.run_number }}
 
