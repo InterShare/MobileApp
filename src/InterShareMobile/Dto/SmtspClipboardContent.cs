@@ -3,8 +3,8 @@ using SMTSP.Entities.Content;
 
 namespace InterShareMobile.Dto
 {
-    [SmtsContent(nameof(SmtspClipboardContent))]
-    public class SmtspClipboardContent : SmtspContent
+    [SmtspContent(nameof(SmtspClipboardContent))]
+    public class SmtspClipboardContent : SmtspContentBase
     {
     }
 }

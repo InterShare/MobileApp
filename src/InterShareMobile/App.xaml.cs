@@ -73,8 +73,8 @@ namespace InterShareMobile
                 SmtspReceiver = new SmtspReceiver();
                 SmtspReceiver.StartReceiving();
                 AppConfig.MyDeviceInfo.Port = ushort.Parse(SmtspReceiver.Port.ToString());
-                _advertiser = new Advertiser(AppConfig.MyDeviceInfo, SMTSP.Entities.DiscoveryTypes.Mdns);
-              
+                _advertiser = new Advertiser(AppConfig.MyDeviceInfo);
+
                 _advertiser.Advertise();
             }
             catch (Exception e)

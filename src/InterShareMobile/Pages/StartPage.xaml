@@ -12,9 +12,9 @@
     Style="{StaticResource SecondaryBackgroundStyle}"
     Title="InterShare">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="gear.png" Text="Hello" Clicked="OnSettingsClicked" />
-    </ContentPage.ToolbarItems>
+    <!-- <ContentPage.ToolbarItems> -->
+    <!--     <ToolbarItem IconImageSource="gear.png" Text="Hello" Clicked="OnSettingsClicked" /> -->
+    <!-- </ContentPage.ToolbarItems> -->
 
     <Grid effects:SafeAreaEffect.SafeArea="false, true, false, false">
         <controls:Pulse

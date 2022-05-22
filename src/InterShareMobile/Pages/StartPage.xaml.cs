@@ -43,10 +43,6 @@ namespace InterShareMobile.Pages
             Start().RunAndForget();
 
             Connectivity.ConnectivityChanged += OnConnectivityChanged;
-
-            // var navigation = new NavigationPage(new SendFilePage());
-            // navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
-            // Navigation.PushModalAsync(navigation);
         }
 
         private void OnConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
@@ -63,7 +59,7 @@ namespace InterShareMobile.Pages
                 DeviceInfo.Loading = false;
 
                 App.SmtspReceiver.RegisterTransferRequestCallback(OnTransferRequestCallback);
-                App.SmtspReceiver.OnFileReceive += OnContentReceived;
+                App.SmtspReceiver.OnContentReceive += OnContentReceived;
 
                 DeviceInfo.Port = App.SmtspReceiver.Port;
                 DeviceInfo.IpAddress = IpAddress.GetIpAddress();
@@ -79,7 +75,7 @@ namespace InterShareMobile.Pages
             }
         }
 
-        private async void OnContentReceived(object sender, SmtspContent content)
+        private async void OnContentReceived(object sender, SmtspContentBase content)
         {
             if (content is SmtspFileContent fileContent)
             {
@@ -91,11 +87,14 @@ namespace InterShareMobile.Pages
             }
         }
 
-        private async Task HandleClipboardReceived(SmtspContent content)
+        private async Task HandleClipboardReceived(SmtspContentBase content)
         {
-            using var sr = new StreamReader(content.DataStream);
-            var receivedText = await sr.ReadToEndAsync();
-            await Clipboard.SetTextAsync(receivedText);
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                using var sr = new StreamReader(content.DataStream!);
+                string? receivedText = await sr.ReadToEndAsync();
+                await Clipboard.SetTextAsync(receivedText);
+            });
         }
 
         private async Task HandleFileReceived(SmtspFileContent file)
@@ -160,14 +159,14 @@ namespace InterShareMobile.Pages
             {
                 bool answer = false;
 
-                if (transferRequest.Content is SmtspFileContent fileContent)
+                if (transferRequest.ContentBase is SmtspFileContent fileContent)
                 {
                     answer = await DisplayAlert("Received file request", $"{transferRequest.SenderName}\n wants to send you \"{fileContent.FileName}\"", "Accept", "Deny");
                 }
-                //else
-                //{
-                //    answer = await DisplayAlert("Received clipboard request", $"{transferRequest.SenderName}\n wants to share the clipboard", "Accept", "Deny");
-                //}
+                else
+                {
+                    answer = await DisplayAlert("Received clipboard request", $"{transferRequest.SenderName}\n wants to share the clipboard", "Accept", "Deny");
+                }
 
                 return answer;
             });
@@ -279,7 +278,7 @@ namespace InterShareMobile.Pages
         {
             try
             {
-                var clipboard = Clipboard.HasText ? await Clipboard.GetTextAsync() : null;
+                string? clipboard = Clipboard.HasText ? await Clipboard.GetTextAsync() : null;
 
                 if (clipboard == null)
                 {
@@ -293,19 +292,27 @@ namespace InterShareMobile.Pages
                 {
                     DataStream = clipboardStream
                 };
-                
+
                 var navigation = new NavigationPage(new SendFilePage(content));
 
                 navigation.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.PageSheet);
                 await Navigation.PushModalAsync(navigation);
-
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 await DisplayAlert("Exception", ex.Message, "Ok");
             }
+        }
+
+        private void OnSettingsClicked(object sender, EventArgs e)
+        {
+        }
+
+        private void OnShowDownloadedFilesClicked(object sender, EventArgs e)
+        {
+            var directoryService = DependencyService.Get<IDirectoryService>();
+            directoryService.OpenDownloadDirectory();
         }
     }
 }

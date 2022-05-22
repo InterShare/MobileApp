@@ -23,7 +23,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>InterShare</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.julian-baumann.InterShareMobile</string>
+	<string>com.julian-baumann.intershare-mobile</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>

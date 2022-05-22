@@ -21,7 +21,7 @@ namespace InterShareMobile.Pages
     {
         private readonly Discovery _discovery;
         private readonly Func<Stream> _getStreamCallback;
-        private readonly SmtspContent _content;
+        private readonly SmtspContentBase _content;
 
         public ObservableCollection<DeviceInfo> Devices { get; set; } = new ObservableCollection<DeviceInfo>();
 
@@ -30,9 +30,9 @@ namespace InterShareMobile.Pages
             Port = 42420
         };
 
-        public SendFilePage(SmtspContent content)
+        public SendFilePage(SmtspContentBase content)
         {
-            _discovery = new Discovery(AppConfig.MyDeviceInfo, DiscoveryTypes.UdpBroadcasts);
+            _discovery = new Discovery(AppConfig.MyDeviceInfo);
 
             _content = content;
 
