@@ -90,7 +90,7 @@ jobs:
         nuget restore src/InterShareMobile.Android/InterShareMobile.Android.csproj
 
     - name: Setup Android signing
-      run: (echo ${{ secrets.ANDROID_KEYSTORE }} | base64 - decode) > src/InterShareMobile.Android/InterShare.keystore
+      run: (echo ${{ secrets.ANDROID_KEYSTORE }} | base64 - decode) > src/InterShareMobile.Android/InterShare.jks
 
     - name: Get Previous tag
       id: latest_tag
@@ -115,7 +115,7 @@ jobs:
         version-code: ${{ github.run_number }}
 
     - name: Build Android
-      run: MSBuild /t:SignAndroidPackage /p:Configuration=Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=intershare /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} /p:AndroidSigningKeyStore=InterShare.keystore /p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} src/InterShareMobile.Android/InterShareMobile.Android.csproj
+      run: MSBuild /t:SignAndroidPackage /p:Configuration=Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=intershare /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} /p:AndroidSigningKeyStore=InterShare.jks /p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} src/InterShareMobile.Android/InterShareMobile.Android.csproj
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
