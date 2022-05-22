@@ -32,6 +32,7 @@ jobs:
       uses: apple-actions/download-provisioning-profiles@v1
       with:
         bundle-id: 'com.julian-baumann.intershare-mobile'
+        profile-type: 'IOS_APP_ADHOC'
         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
         api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
         api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
@@ -86,7 +87,7 @@ jobs:
     - name: Restore
       run: |
         dotnet restore src/InterShareMobile/InterShareMobile.csproj
-        dotnet restore src/InterShareMobile.Android/InterShareMobile.Android.csproj
+        nuget restore src/InterShareMobile.Android/InterShareMobile.Android.csproj
 
     - name: Setup Android signing
       run: (echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -di) > src/InterShareMobile.Android/InterShare.keystore

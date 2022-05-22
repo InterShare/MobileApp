@@ -67,7 +67,7 @@
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <!-- <CodesignEntitlements>Entitlements.plist</CodesignEntitlements> -->
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>SdkOnly</MtouchLink>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
