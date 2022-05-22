@@ -1,0 +1,122 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  iOS:
+    name: Build iOS IPA
+    runs-on: macos-latest
+    environment: Build
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Setup Certificates
+      uses: apple-actions/import-codesign-certs@v1
+      with:
+        p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+        p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+        keychain: github-actions-xamarin
+        keychain-password: ""
+
+    - name: Setup Provisioning Profiles
+      uses: apple-actions/download-provisioning-profiles@v1
+      with:
+        bundle-id: 'com.julian-baumann.intershare-mobile'
+        issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+        api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+        api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
+    - name: Restore
+      run: |
+        dotnet restore src/InterShareMobile/InterShareMobile.csproj
+        nuget restore src/InterShareMobile.iOS/InterShareMobile.iOS.csproj
+
+    - name: Get Previous tag
+      id: latest_tag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: 0.0.0
+
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+
+    - name: Set iOS version
+      env:
+        BUILD_VERSION: ${{ steps.latest_tag.outputs.tag }}-${{ steps.extract_branch.outputs.branch }}
+      run: |
+        CLEAN_VERSION=$(echo "$BUILD_VERSION" | sed -r 's/[\/]+/-/g')
+        /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $CLEAN_VERSION" src/InterShareMobile.iOS/Info.plist
+        /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.run_number }}" src/InterShareMobile.iOS/Info.plist
+
+    - name: Build iOS
+      run: MSBuild /t:Build /p:Configuration=Release /p:Platform=iPhone /p:BuildIpa=true src/InterShareMobile.iOS/InterShareMobile.iOS.csproj
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: iOS
+        path: ${{ github.workspace }}/build/src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa
+
+  android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Restore
+      run: |
+        dotnet restore src/InterShareMobile/InterShareMobile.csproj
+        dotnet restore src/InterShareMobile.Android/InterShareMobile.Android.csproj
+
+    - name: Setup Android signing
+      run: (echo ${{ secrets.KEYSTORE }} | base64 — decode) > src/InterShareMobile.Android/InterShare.keystore
+
+    - name: Get Previous tag
+      id: latest_tag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: 0.0.0
+
+    - name: Construct Version
+      id: construct_version
+      shell: bash
+      run: |
+        Branch=$(echo ${GITHUB_REF#refs/heads/});
+        Version="${{ steps.latest_tag.outputs.tag }}-$Branch";
+        CleanVersion=$(echo "$Version" | sed -r 's/[\/]+/-/g');
+        echo "##[set-output name=branch;]$(echo $CleanVersion)"
+
+    - name: Set Android version
+      uses: damienaicheh/update-android-version-manifest-action@v1.0.0
+      with:
+        android-manifest-path: ./GitHubActions.Android/Properties/AndroidManifest.xml
+        version-name: ${{ steps.construct_version.outputs.branch }}
+        version-code: ${{ github.run_number }}
+
+    - name: Build Android
+      run: MSBuild /t:SignAndroidPackage /p:Configuration=Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=intershare /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} /p:AndroidSigningKeyStore=InterShare.keystore /p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} src/InterShareMobile.Android/InterShareMobile.Android.csproj
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-binary
+        path: ${{ github.workspace }}/build/InterShare.tar.gz
