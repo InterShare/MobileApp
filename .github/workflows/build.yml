@@ -68,7 +68,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: iOS
-        path: ${{ github.workspace }}/build/src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa
+        path: ${{ github.workspace }}/src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa
 
   android:
     name: Build Android APK
@@ -90,7 +90,7 @@ jobs:
         nuget restore src/InterShareMobile.Android/InterShareMobile.Android.csproj
 
     - name: Setup Android signing
-      run: (echo ${{ secrets.ANDROID_KEYSTORE }} | base64 - decode) > src/InterShareMobile.Android/InterShare.jks
+      run: (echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -di) > src/InterShareMobile.Android/InterShare.jks
 
     - name: Get Previous tag
       id: latest_tag
