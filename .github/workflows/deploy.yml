@@ -67,17 +67,8 @@ jobs:
     - name: Build iOS
       run: MSBuild /t:Build /p:Configuration=Release /p:Platform=iPhone /p:BuildIpa=true src/InterShareMobile.iOS/InterShareMobile.iOS.csproj
 
-    - name: Upload app to TestFlight
-      uses: apple-actions/upload-testflight-build@v1
-      with:
-        app-path: ${{ github.workspace }}/src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa
-        issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-        api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
-        api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
-
     - name: Rename IPA
-      run: mv src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa \
-            src/InterShareMobile.iOS/InterShare-${{ github.event.inputs.version }}.ipa
+      run: mv ${{ github.workspace }}/src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa ${{ github.workspace }}/src/InterShareMobile.iOS/InterShare-${{ github.event.inputs.version }}.ipa
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
@@ -133,8 +124,7 @@ jobs:
       run: MSBuild /t:SignAndroidPackage /p:Configuration=Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=intershare /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} /p:AndroidSigningKeyStore=InterShare.jks /p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} src/InterShareMobile.Android/InterShareMobile.Android.csproj
 
     - name: Rename APK
-      run: mv src/InterShareMobile.Android/bin/Release/com.julian_baumann.intershare-Signed.apk \
-            src/InterShareMobile.Android/InterShare-${{ github.event.inputs.version }}.apk
+      run: mv ${{ github.workspace }}/src/InterShareMobile.Android/bin/Release/com.julian_baumann.intershare-Signed.apk ${{ github.workspace }}/src/InterShareMobile.Android/InterShare-${{ github.event.inputs.version }}.apk
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
@@ -166,3 +156,21 @@ jobs:
         files: |
           ${{ github.workspace }}/downloads/Android-APK/InterShare-${{ github.event.inputs.version }}.apk
           ${{ github.workspace }}/downloads/iOS/InterShare-${{ github.event.inputs.version }}.ipa
+
+  upload-app-store:
+    runs-on: macos-latest
+    name: Upload iOS app to App Store Connect
+    needs: [create-release]
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: ${{ github.workspace }}/downloads
+
+    - name: Upload app to TestFlight
+      uses: apple-actions/upload-testflight-build@v1
+      with:
+        app-path: ${{ github.workspace }}/downloads/iOS/InterShare-${{ github.event.inputs.version }}.ipa
+        issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+        api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+        api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}

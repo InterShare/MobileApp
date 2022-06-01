@@ -65,8 +65,7 @@ jobs:
       run: MSBuild /t:Build /p:Configuration=Release /p:Platform=iPhone /p:BuildIpa=true src/InterShareMobile.iOS/InterShareMobile.iOS.csproj
 
     - name: Rename IPA
-      run: mv src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa \
-            src/InterShareMobile.iOS/InterShare.ipa
+      run: mv ${{ github.workspace }}/src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa ${{ github.workspace }}/src/InterShareMobile.iOS/InterShare.ipa
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
@@ -122,8 +121,7 @@ jobs:
       run: MSBuild /t:SignAndroidPackage /p:Configuration=Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=intershare /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} /p:AndroidSigningKeyStore=InterShare.jks /p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} src/InterShareMobile.Android/InterShareMobile.Android.csproj
 
     - name: Rename APK
-      run: mv src/InterShareMobile.Android/bin/Release/com.julian_baumann.intershare-Signed.apk \
-            src/InterShareMobile.Android/InterShare.apk
+      run: mv ${{ github.workspace }}/src/InterShareMobile.Android/bin/Release/com.julian_baumann.intershare-Signed.apk ${{ github.workspace }}/src/InterShareMobile.Android/InterShare.apk
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
