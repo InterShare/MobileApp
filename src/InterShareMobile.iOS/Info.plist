@@ -26,6 +26,8 @@
 	<string>com.julian-baumann.intershare-mobile</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
