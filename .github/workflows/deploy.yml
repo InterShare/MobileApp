@@ -51,17 +51,9 @@ jobs:
       with:
         fallback: 0.0.0
 
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
-
     - name: Set iOS version
-      env:
-        BUILD_VERSION: ${{ steps.latest_tag.outputs.tag }}-${{ steps.extract_branch.outputs.branch }}
       run: |
-        CLEAN_VERSION=$(echo "$BUILD_VERSION" | sed -r 's/[\/]+/-/g')
-        /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $CLEAN_VERSION" src/InterShareMobile.iOS/Info.plist
+        /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${{ github.event.inputs.version }}" src/InterShareMobile.iOS/Info.plist
         /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.run_number }}" src/InterShareMobile.iOS/Info.plist
 
     - name: Build iOS
@@ -104,20 +96,11 @@ jobs:
       with:
         fallback: 0.0.0
 
-    - name: Construct Version
-      id: construct_version
-      shell: bash
-      run: |
-        Branch=$(echo ${GITHUB_REF#refs/heads/});
-        Version="${{ steps.latest_tag.outputs.tag }}-$Branch";
-        CleanVersion=$(echo "$Version" | sed -r 's/[\/]+/-/g');
-        echo "##[set-output name=branch;]$(echo $CleanVersion)"
-
     - name: Set Android version
       uses: damienaicheh/update-android-version-manifest-action@v1.0.0
       with:
         android-manifest-path: src/InterShareMobile.Android/Properties/AndroidManifest.xml
-        version-name: ${{ steps.construct_version.outputs.branch }}
+        version-name: ${{ github.event.inputs.version }}
         version-code: ${{ github.run_number }}
 
     - name: Build Android
