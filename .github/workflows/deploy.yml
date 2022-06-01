@@ -161,6 +161,7 @@ jobs:
     runs-on: macos-latest
     name: Upload iOS app to App Store Connect
     needs: [create-release]
+    environment: Build
     steps:
     - name: Download artifacts
       uses: actions/download-artifact@v3
