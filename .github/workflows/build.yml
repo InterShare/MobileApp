@@ -67,7 +67,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: iOS
+        name: iOS-IPA
         path: ${{ github.workspace }}/src/InterShareMobile.iOS/bin/iPhone/Release/InterShareMobile.iOS.ipa
 
   android:
@@ -120,5 +120,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: linux-binary
-        path: ${{ github.workspace }}/build/InterShare.tar.gz
+        name: Android-APK
+        path: ${{ github.workspace }}/src/InterShareMobile.Android/bin/Release/com.julian_baumann.intershare-Signed.apk
