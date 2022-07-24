@@ -46,5 +46,11 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Needed to discover nearby devices.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_smtsp._tcp</string>
+	</array>
 </dict>
 </plist>
