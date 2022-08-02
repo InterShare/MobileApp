@@ -14,7 +14,7 @@
             HeightRequest="50"
             xamEffects:TouchEffect.Color="#33FFFFFF"
             xamEffects:Commands.Tap="{Binding TapCommand}"
-            CornerRadius="{OnPlatform Android=10, iOS=15}">
+            CornerRadius="{OnPlatform Android=16, iOS=15}">
             <StackLayout VerticalOptions="Center" Orientation="Horizontal" HorizontalOptions="Center" Padding="10">
                 <Image IsVisible="{Binding Image, Converter={xct:IsNotNullOrEmptyConverter}}" WidthRequest="20" Source="{Binding Image}"></Image>
 

@@ -7,7 +7,7 @@ namespace InterShareMobile.Core
 {
     public class AppConfig
     {
-        public static string DownloadPath { get; set; }
+        public static string? DownloadPath { get; set; }
         public static DeviceInfo MyDeviceInfo { get; set; }
 
         public static void Initialize()
