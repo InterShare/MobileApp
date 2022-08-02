@@ -51,6 +51,8 @@
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_smtsp._tcp</string>
+		<string>_smtsp._tcp.local</string>
+		<string>_smtsp._tcp.local.</string>
 	</array>
 </dict>
 </plist>

@@ -2,8 +2,6 @@
 using InterShareMobile.Core;
 using InterShareMobile.Pages;
 using SMTSP;
-using SMTSP.Advertisement;
-using SMTSP.Core;
 using SMTSP.Discovery;
 using SMTSP.Discovery.Entities;
 using Xamarin.Essentials;
@@ -17,7 +15,7 @@ namespace InterShareMobile
 {
     public partial class App : Application
     {
-        private Advertiser? _advertiser;
+        public static DeviceDiscovery DeviceDiscovery = null!;
 
         public static SmtspReceiver SmtspReceiver { get; set; }
 
@@ -49,12 +47,12 @@ namespace InterShareMobile
                 _ => DeviceTypes.Phone
             };
 
-            AppConfig.MyDeviceInfo = new SMTSP.Entities.DeviceInfo()
-            {
-                DeviceId = (string) deviceIdentifier,
-                DeviceName = (string) name,
-                DeviceType = deviceType
-            };
+            AppConfig.MyDeviceInfo = new SMTSP.Entities.DeviceInfo(
+                deviceId: (string) deviceIdentifier,
+                deviceName: (string) name,
+                deviceType: deviceType,
+                capabilities: new[] {"InterShare"}
+            );
 
             InitializeComponent();
             Start();
@@ -69,13 +67,11 @@ namespace InterShareMobile
         {
             try
             {
-                SmtsConfig.LoggerOutputEnabled = true;
-                SmtspReceiver = new SmtspReceiver();
+                SmtspReceiver = new SmtspReceiver(AppConfig.MyDeviceInfo);
                 SmtspReceiver.StartReceiving();
-                AppConfig.MyDeviceInfo.Port = ushort.Parse(SmtspReceiver.Port.ToString());
-                _advertiser = new Advertiser(AppConfig.MyDeviceInfo);
-
-                _advertiser.Advertise();
+                
+                DeviceDiscovery = new DeviceDiscovery(AppConfig.MyDeviceInfo);
+                DeviceDiscovery.Advertise();
             }
             catch (Exception e)
             {
@@ -87,14 +83,14 @@ namespace InterShareMobile
         {
         }
 
-        protected async override void OnSleep()
+        protected override async void OnSleep()
         {
-            _advertiser?.StopAdvertising();
+            DeviceDiscovery?.StopAdvertising();
         }
 
-        protected async override void OnResume()
+        protected override async void OnResume()
         {
-            _advertiser?.Advertise();
+            DeviceDiscovery?.Advertise();
         }
     }
 }

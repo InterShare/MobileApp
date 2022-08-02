@@ -61,7 +61,7 @@ namespace InterShareMobile.Pages
                 App.SmtspReceiver.RegisterTransferRequestCallback(OnTransferRequestCallback);
                 App.SmtspReceiver.OnContentReceive += OnContentReceived;
 
-                DeviceInfo.Port = App.SmtspReceiver.Port;
+                DeviceInfo.Port = AppConfig.MyDeviceInfo.TcpPort;
                 DeviceInfo.IpAddress = IpAddress.GetIpAddress();
                 DeviceInfo.Name = AppConfig.MyDeviceInfo.DeviceName;
                 DeviceInfo.UserIdentifier = AppConfig.MyDeviceInfo.DeviceId;

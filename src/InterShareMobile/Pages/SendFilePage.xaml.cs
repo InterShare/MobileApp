@@ -7,19 +7,16 @@ using InterShareMobile.Core;
 using InterShareMobile.Entities;
 using InterShareMobile.Helper;
 using SMTSP;
-using SMTSP.Discovery;
 using SMTSP.Entities;
 using SMTSP.Entities.Content;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DeviceInfo = SMTSP.Entities.DeviceInfo;
 
 namespace InterShareMobile.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SendFilePage : ContentPage
     {
-        private readonly Discovery _discovery;
         private readonly Func<Stream> _getStreamCallback;
         private readonly SmtspContentBase _content;
 
@@ -32,20 +29,19 @@ namespace InterShareMobile.Pages
 
         public SendFilePage(SmtspContentBase content)
         {
-            _discovery = new Discovery(AppConfig.MyDeviceInfo);
 
             _content = content;
 
             try
             {
                 // _discovery.DiscoveredDevices.CollectionChanged += DiscoveredDevicesOnCollectionChanged;
-                Devices = _discovery.DiscoveredDevices;
+                Devices = App.DeviceDiscovery.DiscoveredDevices;
                 // DiscoveredDevicesOnCollectionChanged(null, null);
 
                 BindingContext = this;
                 InitializeComponent();
 
-                _discovery.SendOutLookupSignal();
+                App.DeviceDiscovery.StartDiscovering();
             }
             catch(Exception exception)
             {
@@ -67,26 +63,22 @@ namespace InterShareMobile.Pages
         {
             base.OnDisappearing();
             _content?.Dispose();
-            _discovery.Dispose();
+            App.DeviceDiscovery.StopDiscovering();
         }
 
-        private async Task SendFile(string ipAddress, ushort port)
+        private async Task SendFile(DeviceInfo device)
         {
             try
             {
                 Bindings.Loading = true;
 
-                SendFileResponses result = await SmtspSender.SendFile(
-                        new DeviceInfo()
-                        {
-                            IpAddress = ipAddress,
-                            Port = port
-                        },
+                SendResponses result = await SmtspSender.Send(
+                        device,
                         _content,
                         AppConfig.MyDeviceInfo
                     );
 
-                if (result == SendFileResponses.Denied)
+                if (result == SendResponses.Denied)
                 {
                     await DisplayAlert("Declined", "The receiver declined the file", "Ok");
                     Bindings.Loading = false;
@@ -112,14 +104,14 @@ namespace InterShareMobile.Pages
 
         private void OnDeviceTapped(object sender, DeviceInfo deviceInfo)
         {
-            SendFile(deviceInfo.IpAddress, deviceInfo.Port).RunAndForget();
+            SendFile(deviceInfo).RunAndForget();
         }
 
         private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (e.Item is DeviceInfo deviceInfo)
             {
-                SendFile(deviceInfo.IpAddress, deviceInfo.Port).RunAndForget();
+                SendFile(deviceInfo).RunAndForget();
             }
         }
     }
