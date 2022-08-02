@@ -4,8 +4,6 @@
 <dict>
     <key>com.apple.developer.networking.multicast</key>
     <true/>
-    <key>com.apple.developer.networking.wifi-info</key>
-    <true/>
 </dict>
 </plist>
 
